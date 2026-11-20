@@ -1,1 +1,79 @@
+#include <stdio.h>
 
+struct Flight {
+    int flightnumber;
+    char departurecity[50];
+    char destinationcity[50];
+    char date[20];
+    int availableseats;
+};
+
+void displayFlights(struct Flight flights[], int n) {
+    printf("\n--- Flight List ---\n");
+    for (int i = 0; i < n; i++) {
+        printf("Flight %d: %s to %s | Date: %s | Seats left: %d\n",
+               flights[i].flightnumber,
+               flights[i].departurecity,
+               flights[i].destinationcity,
+               flights[i].date,
+               flights[i].availableseats);
+    }
+}
+
+void bookSeat(struct Flight flights[], int n, int flightnum) {
+    int found = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (flights[i].flightnumber == flightnum) {
+            found = 1;
+            if (flights[i].availableseats > 0) {
+                flights[i].availableseats = flights[i].availableseats - 1;
+                printf("Booking confirmed! Seats left on Flight %d: %d\n",
+                       flights[i].flightnumber,
+                       flights[i].availableseats);
+            } else {
+                printf("No seats available on Flight %d.\n", flights[i].flightnumber);
+            }
+            break;
+        }
+    }
+
+    if (found == 0) {
+        printf("Flight %d not found.\n", flightnum);
+    }
+}
+
+int main(void) {
+    struct Flight flights[4] = {
+        {101, "Karachi", "Lahore", "2026-11-25", 10},
+        {202, "Lahore", "Islamabad", "2026-11-26", 3},
+        {303, "Islamabad", "Karachi", "2026-11-27", 0},
+        {404, "Karachi", "Multan", "2026-11-28", 15}
+    };
+
+    int choice = 0;
+    int flightnum = 0;
+
+    while (1) {
+        printf("\n1. Show all flights\n");
+        printf("2. Book a seat\n");
+        printf("3. Exit\n");
+        input:
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        if (choice == 1) {
+            displayFlights(flights, 4);
+        } else if (choice == 2) {
+            printf("Enter flight number: ");
+            scanf("%d", &flightnum);
+            bookSeat(flights, 4, flightnum);
+        } else if (choice == 3) {
+            break;
+        } else {
+            printf("Invalid choice. ");
+            goto input;
+        }
+    }
+    return 0;
+}
